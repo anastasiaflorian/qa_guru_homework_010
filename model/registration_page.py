@@ -15,15 +15,15 @@ class RegistrationPage:
         self.address = browser.element('#currentAddress')
         self.state = browser.element('#react-select-3-input')
         self.city = browser.element('#react-select-4-input')
-        self.gender = browser.element('label[for="gender-radio-3')
+        self.gender = browser.element('label[for="gender-radio-2')
 
     def open(self):
         browser.open('/automation-practice-form')
-        browser.all('[id^=google_ads][id$=container__]').with_(timeout=10).wait_until(
-            have.size_greater_than_or_equal(3)
-        )
-        browser.all('[id^=google_ads][id$=container__]').perform(command.js.remove)
-        return self
+        # browser.all('[id^=google_ads][id$=container__]').with_(timeout=10).wait_until(
+        #     have.size_greater_than_or_equal(3)
+        # )
+        # browser.all('[id^=google_ads][id$=container__]').perform(command.js.remove)
+        # return self
 
     def fill_first_name(self, value):
         self.first_name.type(value)
@@ -62,8 +62,8 @@ class RegistrationPage:
         self.photo.send_keys(os.path.abspath(f'{path}'))
         return self
 
-    def fill_address(self, house_number, street, city, zip_code, country):
-        self.address.type(f'{house_number}, {street}, {city}, {zip_code}, {country}')
+    def fill_current_address(self, value):
+        browser.element('#currentAddress').type(value)
         return self
 
     def state_select(self, value):
@@ -73,19 +73,19 @@ class RegistrationPage:
     def city_select(self, value):
         self.city.type(value).press_enter()
 
-    def should_registrated_user_with(self, full_name, email, gender, phone_number, date_of_birth, subject,
-                                     hobby, name_of_photo, current_address, state_and_city):
-        browser.element('.table').all('td').even.should(have.exact_texts(
-            full_name,
-            email,
-            gender,
-            phone_number,
-            date_of_birth,
-            subject,
-            hobby,
-            name_of_photo,
-            current_address,
-            state_and_city,
-        )
-        )
+    def should_registrated_user_with(self, student):
+        browser.all(".table-dark>tbody>tr>td:nth-child(2)").should(have.texts(
+        f'{student.first_name} {student.last_name}',
+            student.email,
+            student.gender,
+            student.phone_number,
+            f'{student.day_of_birth} {student.month_of_birth},{student.year_of_birth}',
+            student.subject,
+            student.hobby,
+            student.picture,
+            student.current_address,
+            f'{student.state} {student.city}'
+        ))
         return self
+
+

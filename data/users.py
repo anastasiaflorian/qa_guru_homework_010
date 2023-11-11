@@ -6,16 +6,15 @@ class User:
     last_name: str
     email: str
     gender: str
-    phone: str
-    first_subject: str
-    second_subject: str
+    phone_number: str
+    month_of_birth: str
+    year_of_birth: str
+    day_of_birth: str
+    subject: str
+    hobby: str
+    picture: str
     current_address: str
     state: str
     city: str
-    day_birth: str
-    month_birth: str
-    year_birth: str
-    file_name: str
-    hobbies: str
 
 
