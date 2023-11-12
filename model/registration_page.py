@@ -1,5 +1,5 @@
 import os
-from selene import have, command
+from selene import have, command, be
 from selene.support.shared import browser
 
 
@@ -9,7 +9,7 @@ class RegistrationPage:
         self.last_name = browser.element('#lastName')
         self.email = browser.element('#userEmail')
         self.phone_number = browser.element('#userNumber')
-        self.subject_input = browser.element('#subjectsInput')
+        self.subject = browser.element('#subjectsInput')
         self.hobby = browser.element('//*[@id="hobbiesWrapper"]/div[2]/div[2]/label')
         self.photo = browser.element('#uploadPicture')
         self.address = browser.element('#currentAddress')
@@ -19,11 +19,11 @@ class RegistrationPage:
 
     def open(self):
         browser.open('/automation-practice-form')
-        # browser.all('[id^=google_ads][id$=container__]').with_(timeout=10).wait_until(
-        #     have.size_greater_than_or_equal(3)
-        # )
-        # browser.all('[id^=google_ads][id$=container__]').perform(command.js.remove)
-        # return self
+        browser.all('[id^=google_ads][id$=container__]').with_(timeout=10).wait_until(
+            have.size_greater_than_or_equal(3)
+        )
+        browser.all('[id^=google_ads][id$=container__]').perform(command.js.remove)
+        return self
 
     def fill_first_name(self, value):
         self.first_name.type(value)
@@ -45,7 +45,7 @@ class RegistrationPage:
         self.gender.click()
 
     def fill_subject(self, value):
-        self.subject_input.type(value).press_enter()
+        self.subject.type(value).press_enter()
         return self
 
     def fill_date_of_birth(self, year, month, day):
@@ -79,13 +79,36 @@ class RegistrationPage:
             student.email,
             student.gender,
             student.phone_number,
-            f'{student.day_of_birth} {student.month_of_birth},{student.year_of_birth}',
+            f'{student.day_of_birth} November,{student.year_of_birth}',
             student.subject,
             student.hobby,
             student.picture,
-            student.current_address,
+            f'{student.current_address}',
             f'{student.state} {student.city}'
         ))
         return self
 
+    def registration(self, user):
+        self.first_name.should(be.blank).type(user.first_name)
+        self.last_name.should(be.blank).type(user.last_name)
+        self.email.should(be.blank).type(user.email)
 
+        browser.element('label[for="gender-radio-2').click()
+
+        self.phone_number.should(be.blank).type(user.phone_number)
+
+        self.fill_date_of_birth(user.year_of_birth, user.month_of_birth, user.day_of_birth)
+
+        self.subject.should(be.blank).type(user.subject).press_enter()
+
+        browser.element(f"[for='hobbies-checkbox-2']").click()
+
+        self.add_photo("image/pngwing.com (1).png")
+        self.address.should(be.blank).type(user.current_address)
+
+        browser.element('#state').click()
+        browser.element('#react-select-3-option-1').click()
+        browser.element('#city').click()
+        browser.element('#react-select-4-option-1').click()
+        browser.element('#submit').perform(command.js.scroll_into_view)
+        browser.element('#submit').execute_script('element.click()')
