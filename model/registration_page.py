@@ -2,7 +2,8 @@ import os
 from selene import have, command, be
 from selene.support.shared import browser
 
-from data.users import Gender
+
+# from data.users import Gender
 
 
 class RegistrationPage:
@@ -75,12 +76,11 @@ class RegistrationPage:
     def city_select(self, value):
         self.city.type(value).press_enter()
 
-
     def should_registrated_user_with(self, student):
         browser.all(".table-dark>tbody>tr>td:nth-child(2)").should(have.texts(
-        f'{student.first_name} {student.last_name}',
+            f'{student.first_name} {student.last_name}',
             student.email,
-            student.gender.value,
+            student.gender,
             student.phone_number,
             f'{student.day_of_birth} November,{student.year_of_birth}',
             student.subject,
@@ -96,12 +96,7 @@ class RegistrationPage:
         self.last_name.should(be.blank).type(user.last_name)
         self.email.should(be.blank).type(user.email)
 
-        if user.gender == Gender.MALE:
-            browser.element('label[for="gender-radio-1').click()
-        elif user.gender == Gender.FEMALE:
-            browser.element('label[for="gender-radio-2').click()
-        else:
-            browser.element('label[for="gender-radio-3').click()
+        browser.element('label[for="gender-radio-2').click()
 
         self.phone_number.should(be.blank).type(user.phone_number)
 

@@ -7,7 +7,7 @@ class User:
     email: str
     gender: str
     phone_number: str
-    month_of_birth: int
+    month_of_birth: str
     year_of_birth: int
     day_of_birth: int
     subject: str
